@@ -1,0 +1,45 @@
+name: Custom CSV cleanup inquiry
+description: Discuss a bounded paid cleanup job. Do not upload private data.
+title: "Work inquiry: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a public inquiry, not a purchase or a confirmed booking.
+        Please share only non-sensitive scope details. Do not attach real customer files, personal data, passwords or access tokens.
+        The standard package is $300 USD for up to 10 same-schema files and 100,000 total rows, subject to sample review and agreed rules.
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Required result
+      description: What should the cleaned output contain, and what should remain unchanged?
+    validations:
+      required: true
+  - type: input
+    id: volume
+    attributes:
+      label: Approximate volume
+      placeholder: "Example: 4 CSV files, 25,000 rows total, 8 columns"
+    validations:
+      required: true
+  - type: textarea
+    id: rules
+    attributes:
+      label: Known cleanup rules
+      description: Include number locale, identifier columns and duplicate rules if known. Synthetic examples only.
+    validations:
+      required: false
+  - type: input
+    id: timeframe
+    attributes:
+      label: Desired delivery date and timezone
+      description: Availability and scope will be confirmed before work begins.
+    validations:
+      required: false
+  - type: checkboxes
+    id: public_scope
+    attributes:
+      label: Public information only
+      options:
+        - label: This inquiry contains no private files, credentials or personal customer data.
+          required: true

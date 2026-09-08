@@ -1,0 +1,4 @@
+{"record": 5, "line_start": 6, "line_end": 6, "original": ["0003", "12,3x", "4"], "reasons": ["amount: invalid or empty fractional part"]}
+{"record": 6, "line_start": 7, "line_end": 7, "original": ["0004", "1,234.56", "2"], "reasons": ["amount: invalid or empty fractional part"]}
+{"record": 8, "line_start": 9, "line_end": 9, "original": ["0006", "5", "2", "unexpected"], "reasons": ["expected 3 fields; received 4"]}
+{"record": 9, "line_start": 10, "line_end": 10, "original": ["0007", " 7,50 ", "+03"], "reasons": ["quantity: leading-zero number may be an identifier"]}

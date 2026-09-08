@@ -1,0 +1,68 @@
+{
+  "source": "synthetic-sales.csv",
+  "source_sha256": "8cfc1ab77b6c2788c8df7f701863e26f70429300b6b35a784585f3051dc30fdb",
+  "source_bytes": 145,
+  "header": [
+    "record_id",
+    "amount",
+    "quantity"
+  ],
+  "counts": {
+    "input_records": 9,
+    "output_records": 3,
+    "blank_rows_removed": 1,
+    "duplicates_removed": 1,
+    "quarantined_records": 4,
+    "normalized_cells": 2
+  },
+  "row_counts_reconcile": true,
+  "validated_numeric_totals_reconcile": true,
+  "numeric_totals": {
+    "validated_input": {
+      "amount": "2511",
+      "quantity": "5"
+    },
+    "output": {
+      "amount": "1276.5",
+      "quantity": "3"
+    },
+    "removed_duplicates": {
+      "amount": "1234.5",
+      "quantity": "2"
+    },
+    "quarantined_valid": {
+      "amount": "0",
+      "quantity": "0"
+    }
+  },
+  "blank_numeric_cells_in_validated_input": {
+    "amount": 1,
+    "quantity": 0
+  },
+  "spreadsheet_text_warnings": [],
+  "totals_scope": "Fully validated records only; blanks are missing, not zero. Quarantined invalid rows require client review.",
+  "review_required": true,
+  "rules": {
+    "delimiter": ";",
+    "encoding": "utf-8",
+    "decimal_separator": ",",
+    "thousands_separator": ".",
+    "numeric_columns": [
+      "amount",
+      "quantity"
+    ],
+    "identifier_columns": [
+      "record_id"
+    ],
+    "text_columns": [],
+    "blank_numeric": "keep",
+    "allow_outer_whitespace": true,
+    "allow_leading_zero_numbers": false,
+    "drop_blank_rows": true,
+    "duplicates": {
+      "mode": "drop_exact",
+      "keys": []
+    }
+  },
+  "cleaned_sha256": "2d380ca8ab4cfabe13127ae2de0e043c509398df69ec322973bf8c2156256e17"
+}

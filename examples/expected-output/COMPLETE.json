@@ -1,0 +1,9 @@
+{
+  "complete": true,
+  "review_required": true,
+  "files": [
+    "synthetic-sales.csv"
+  ],
+  "data_is_synthetic": "not inferred; caller must label the inputs",
+  "notice": "Complete processing does not mean quarantined rows are resolved or buyer acceptance is obtained."
+}

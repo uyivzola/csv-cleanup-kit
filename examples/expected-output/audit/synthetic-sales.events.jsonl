@@ -1,0 +1,8 @@
+{"record": 1, "line_start": 2, "line_end": 2, "action": "normalize", "changes": [{"column": "amount", "before": "1.234,50", "after": "1234,5"}]}
+{"record": 2, "line_start": 3, "line_end": 3, "action": "remove_exact_duplicate", "original": ["0001", "1234,5", "2"], "matches_record": 1, "comparison": "all normalized fields"}
+{"record": 4, "line_start": 5, "line_end": 5, "action": "remove_blank", "original": ["", "", ""]}
+{"record": 5, "line_start": 6, "line_end": 6, "action": "quarantine", "reasons": ["amount: invalid or empty fractional part"]}
+{"record": 6, "line_start": 7, "line_end": 7, "action": "quarantine", "reasons": ["amount: invalid or empty fractional part"]}
+{"record": 7, "line_start": 8, "line_end": 8, "action": "normalize", "changes": [{"column": "amount", "before": "42,00", "after": "42"}]}
+{"record": 8, "line_start": 9, "line_end": 9, "action": "quarantine", "reasons": ["expected 3 fields; received 4"]}
+{"record": 9, "line_start": 10, "line_end": 10, "action": "quarantine", "reasons": ["quantity: leading-zero number may be an identifier"]}

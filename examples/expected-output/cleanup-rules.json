@@ -1,0 +1,22 @@
+{
+  "delimiter": ";",
+  "encoding": "utf-8",
+  "decimal_separator": ",",
+  "thousands_separator": ".",
+  "numeric_columns": [
+    "amount",
+    "quantity"
+  ],
+  "identifier_columns": [
+    "record_id"
+  ],
+  "text_columns": [],
+  "blank_numeric": "keep",
+  "allow_outer_whitespace": true,
+  "allow_leading_zero_numbers": false,
+  "drop_blank_rows": true,
+  "duplicates": {
+    "mode": "drop_exact",
+    "keys": []
+  }
+}

@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+demo-output/
+rerun-output/
+customer-data/
+.env
+.DS_Store
