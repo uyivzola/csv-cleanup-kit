@@ -103,6 +103,48 @@ class CleanupTests(unittest.TestCase):
         self.assertEqual(result["audit"]["numeric_totals"]["quarantined_valid"]["amount"], "22")
         self.assertTrue(result["audit"]["validated_numeric_totals_reconcile"])
 
+    def test_duplicate_keys_include_rows_with_invalid_non_key_values(self):
+        config = self.config(duplicates={"mode": "quarantine_keys", "keys": ["id"]})
+        for rows in ([["001", "bad"], ["001", "10"]], [["001", "10"], ["001", "bad"]]):
+            with self.subTest(rows=rows):
+                path = self.source([["id", "amount"]] + rows)
+                result = cleaner.run([path], config, dry_run=True)[0]
+                self.assertEqual(result["cleaned"], [])
+                self.assertEqual(len(result["quarantine"]), 2)
+                bad = next(r for r in result["quarantine"] if r["original"][1] == "bad")
+                self.assertTrue(bad["reasons"][0].startswith("amount:"))
+                self.assertTrue(all(any("duplicate key" in reason for reason in r["reasons"])
+                                    for r in result["quarantine"]))
+                self.assertEqual([e["reasons"] for e in result["events"]],
+                                 [r["reasons"] for r in result["quarantine"]])
+                self.assertEqual(result["audit"]["numeric_totals"]["validated_input"]["amount"], "10")
+                self.assertEqual(result["audit"]["numeric_totals"]["quarantined_valid"]["amount"], "10")
+                self.assertTrue(result["audit"]["row_counts_reconcile"])
+                self.assertTrue(result["audit"]["validated_numeric_totals_reconcile"])
+
+    def test_duplicate_keys_normalize_valid_numeric_keys_despite_other_errors(self):
+        config = self.config(numeric_columns=["id", "amount"], identifier_columns=[],
+                             duplicates={"mode": "quarantine_keys", "keys": ["id"]})
+        path = self.source([["id", "amount"], ["1,000.0", "bad"], ["1000", "10"]])
+        result = cleaner.run([path], config, dry_run=True)[0]
+        self.assertEqual(result["cleaned"], [])
+        self.assertEqual(len(result["quarantine"]), 2)
+        self.assertTrue(all(any("duplicate key" in reason for reason in r["reasons"])
+                            for r in result["quarantine"]))
+
+    def test_duplicate_keys_do_not_guess_malformed_keys_or_wrong_width_rows(self):
+        config = self.config(numeric_columns=["id", "amount"], identifier_columns=[],
+                             duplicates={"mode": "quarantine_keys", "keys": ["id"]})
+        path = self.source([["id", "amount"], ["01", "2"], ["1x", "3"], ["", "4"],
+                            ["1", "5", "extra"], ["1", "10"]])
+        result = cleaner.run([path], config, dry_run=True)[0]
+        self.assertEqual(result["cleaned"], [["1", "10"]])
+        self.assertEqual(len(result["quarantine"]), 4)
+        self.assertFalse(any("duplicate key;" in reason for record in result["quarantine"]
+                             for reason in record["reasons"]))
+        self.assertTrue(result["audit"]["row_counts_reconcile"])
+        self.assertTrue(result["audit"]["validated_numeric_totals_reconcile"])
+
     def test_malformed_width_quarantines_original_record(self):
         path = self.source([["id", "amount"], ["001", "2", "extra"], ["002"], ["003", "4"]])
         result = cleaner.run([path], self.config(), self.root / "out")[0]

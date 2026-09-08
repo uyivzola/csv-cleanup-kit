@@ -157,6 +157,8 @@ def process_file(path, raw, rules, expected_header, remaining_rows):
     numeric_indexes = [(header.index(c), c) for c in rules["numeric_columns"]]
     text_indexes = [(header.index(c), c) for c in rules["identifier_columns"] + rules["text_columns"]]
     key_indexes = [header.index(c) for c in rules["duplicates"]["keys"]]
+    numeric_key_columns = set(rules["duplicates"]["keys"]) & set(rules["numeric_columns"])
+    key_counts, quarantined_key_reasons = {}, []
     valid, quarantine, events, text_warnings = [], [], [], []
     counts = dict(input_records=0, output_records=0, blank_rows_removed=0,
                   duplicates_removed=0, quarantined_records=0, normalized_cells=0)
@@ -183,6 +185,7 @@ def process_file(path, raw, rules, expected_header, remaining_rows):
             normalized = row.copy()
             values = {}
             changes = []
+            duplicate_key = None
             if len(row) != len(header):
                 reasons.append(f"expected {len(header)} fields; received {len(row)}")
             else:
@@ -200,9 +203,18 @@ def process_file(path, raw, rules, expected_header, remaining_rows):
                         reasons.append(f"{column}: {exc}")
                 if key_indexes and any(normalized[i] == "" for i in key_indexes):
                     reasons.append("empty duplicate key requires review")
+                # A valid key still identifies a duplicate when an unrelated
+                # field fails validation. Never infer an invalid numeric key or
+                # assign column positions to a record with the wrong width.
+                if (key_indexes and all(normalized[i] != "" for i in key_indexes)
+                        and numeric_key_columns <= values.keys()):
+                    duplicate_key = tuple(normalized[i] for i in key_indexes)
+                    key_counts[duplicate_key] = key_counts.get(duplicate_key, 0) + 1
             if reasons:
                 quarantine.append({**origin, "original": row, "reasons": reasons})
                 events.append({**origin, "action": "quarantine", "reasons": reasons})
+                if duplicate_key is not None:
+                    quarantined_key_reasons.append((duplicate_key, reasons))
                 continue
             for column, value in values.items():
                 if value is None:
@@ -215,18 +227,19 @@ def process_file(path, raw, rules, expected_header, remaining_rows):
         raise CleanupError(f"{path.name}: malformed CSV near line {reader.line_num}: {exc}; batch aborted") from exc
 
     mode = rules["duplicates"]["mode"]
-    key_counts = {}
-    if mode == "quarantine_keys":
-        for record in valid:
-            key = tuple(record["cleaned"][i] for i in key_indexes)
-            key_counts[key] = key_counts.get(key, 0) + 1
+    duplicate_reason = "duplicate key; every member of the group requires review"
+    for key, reasons in quarantined_key_reasons:
+        if key_counts[key] > 1:
+            # The quarantine and event entries share this reasons list. Keep
+            # original validation failures and append the duplicate finding.
+            reasons.append(duplicate_reason)
     seen, cleaned = {}, []
     for record in valid:
         origin = {key: record[key] for key in ("record", "line_start", "line_end")}
         row = record["cleaned"]
         exact_key = tuple(row)
         if mode == "quarantine_keys" and key_counts[tuple(row[i] for i in key_indexes)] > 1:
-            reasons = ["duplicate key; every member of the group requires review"]
+            reasons = [duplicate_reason]
             quarantine.append({**origin, "original": record["original"], "reasons": reasons})
             events.append({**origin, "action": "quarantine", "reasons": reasons})
             total_group = "quarantined_valid"
