@@ -93,6 +93,18 @@ python3 -m unittest -v
 
 The rerun should return 0, produce the same cleaned CSV bytes, and contain no normalization/removal/quarantine events. Tests cover number formats, exact sums, identifiers, blanks, three duplicate policies, idempotence, malformed CSV, schema/row limits, dry runs, malformed configuration, and refused overwrites including symlinks.
 
+## Offline record-update planning
+
+The [CSV-to-Airtable planning demo](examples/airtable-update-plan/) compares CSV text with a supplied synthetic record snapshot and produces update-only plans plus an audit. It preserves text IDs, rejects ambiguous matches and never creates records or calls an API. This is a synthetic demonstration, not a live integration or paid customer project.
+
+From the repository root:
+
+```sh
+python3 examples/airtable-update-plan/plan_updates.py --csv examples/airtable-update-plan/examples/input.csv --mapping examples/airtable-update-plan/examples/mapping.json --records examples/airtable-update-plan/examples/records.json
+```
+
+The example intentionally returns exit code 3: one update is planned, one record is unchanged and four require review. See its README for configuration and tests.
+
 ## Customer handover checklist
 
 1. Agree delimiter/encoding, column classifications, decimal/thousands conventions, allowed formats, missing-value policy, duplicate definition/scope, and an expected output sample. Agree the file/row limits and any totals that are meaningful for the business.

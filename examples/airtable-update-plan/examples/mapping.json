@@ -1,0 +1,6 @@
+{
+  "csv_key": "external_id",
+  "record_key": "External ID",
+  "fields": {"name": "Name", "status": "Status"},
+  "blank_values": "skip"
+}

@@ -1,0 +1,8 @@
+{
+  "text_fields": ["External ID", "Name", "Status"],
+  "records": [
+    {"id": "recDemo0001", "fields": {"External ID": "0001", "Name": "Example Alpha", "Status": "Open"}},
+    {"id": "recDemo0002", "fields": {"External ID": "0002", "Name": "Example Beta", "Status": "Open"}},
+    {"id": "recDemo0004", "fields": {"External ID": "0004", "Name": "Example Delta", "Status": "Open"}}
+  ]
+}

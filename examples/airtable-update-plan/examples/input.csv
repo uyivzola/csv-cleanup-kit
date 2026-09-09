@@ -1,0 +1,7 @@
+external_id,name,status
+0001,Example Alpha Revised,Open
+0002,Example Beta,Open
+0003,Example Gamma,Open
+0004,Example Delta Revised,Open
+0004,Conflicting Delta,Closed
+,Missing Identifier,Open

@@ -1,0 +1,89 @@
+{
+  "audit": {
+    "creates_planned": 0,
+    "ignored_csv_columns": [],
+    "input_records": 6,
+    "outcomes": [
+      {
+        "csv_record": 1,
+        "key": "0001",
+        "record_id": "recDemo0001",
+        "status": "update_planned"
+      },
+      {
+        "csv_record": 2,
+        "key": "0002",
+        "record_id": "recDemo0002",
+        "status": "unchanged"
+      },
+      {
+        "csv_record": 3,
+        "key": "0003",
+        "reasons": [
+          "no_existing_record_create_refused"
+        ],
+        "status": "rejected"
+      },
+      {
+        "csv_record": 4,
+        "key": "0004",
+        "reasons": [
+          "duplicate_csv_key"
+        ],
+        "status": "rejected"
+      },
+      {
+        "csv_record": 5,
+        "key": "0004",
+        "reasons": [
+          "duplicate_csv_key"
+        ],
+        "status": "rejected"
+      },
+      {
+        "csv_record": 6,
+        "key": "",
+        "reasons": [
+          "missing_match_key"
+        ],
+        "status": "rejected"
+      }
+    ],
+    "rejected_records": 4,
+    "review_required": true,
+    "snapshot_issues": [],
+    "snapshot_records": 3,
+    "unchanged_records": 1,
+    "updates_planned": 1
+  },
+  "mode": "offline_dry_run",
+  "rules": {
+    "blank_values": "skip",
+    "csv_key": "external_id",
+    "fields": {
+      "name": "Name",
+      "status": "Status"
+    },
+    "record_key": "External ID"
+  },
+  "schema_version": 1,
+  "source_sha256": {
+    "csv": "a1f5eb6231edb24e210a575cfc86264934cf56f842998dd9f2b72651f87a0965",
+    "mapping": "8162f3670b44243610dc61ae919c7c073a6be546336f26a6569a58e8f6ea0558",
+    "records": "95842b2d57782d1a7f7dcde5e548183ec65fa9067749e6f1cc6140d99526a400"
+  },
+  "updates": [
+    {
+      "changes": [
+        {
+          "after": "Example Alpha Revised",
+          "before": "Example Alpha",
+          "field": "Name"
+        }
+      ],
+      "key": "0001",
+      "operation": "update",
+      "record_id": "recDemo0001"
+    }
+  ]
+}
